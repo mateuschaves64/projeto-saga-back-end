@@ -38,15 +38,6 @@ CREATE TABLE curso(
     ) NOT NULL
 );
 
-CREATE TABLE usuario_curso(
-	id_usuario_curso_pk INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario_fk INT,
-    id_curso_fk INT,
-    
-    FOREIGN KEY(id_usuario_fk) REFERENCES usuario(id_usuario_pk),
-    FOREIGN KEY(id_curso_fk) REFERENCES curso(id_curso_pk)
-);
-
 CREATE TABLE registro_pedagogico(
 	id_registro_pk INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario_fk INT NOT NULL,
@@ -133,3 +124,38 @@ CREATE TABLE registro_pedagogico(
     FOREIGN KEY(id_usuario_fk) REFERENCES usuario(id_usuario_pk),
     FOREIGN KEY(id_curso_fk) REFERENCES curso(id_curso_pk)
 );
+
+INSERT INTO usuario (
+    nome_completo, 
+    email_usu, 
+    senha_usu, 
+    funcao_atual, 
+    preferencia_tema, 
+    preferencia_contraste, 
+    token_lembrar_me
+) VALUES
+('Ana Clara Souza', 'ana.souza@saga.edu.br', '$2a$12$eImiTXuWVxfM37uY4JANjO', 'Pedagoga', TRUE, FALSE, NULL),
+('Bruno Henrique Lima', 'bruno.lima@saga.edu.br', '$2a$12$fKmiTXuWVxfM37uY4JANjP', 'Coordenador Pedagógico', FALSE, FALSE, 'tk_bruno_9812'),
+('Carla Mendes', 'carla.mendes@saga.edu.br', '$2a$12$gLmiTXuWVxfM37uY4JANjQ', 'Instrutora de TI', TRUE, TRUE, NULL),
+('Diego Rodrigues', 'diego.rodrigues@saga.edu.br', '$2a$12$hMmiTXuWVxfM37uY4JANjR', 'Gerente Escolar', FALSE, FALSE, NULL),
+('Eduarda Ribeiro', 'eduarda.ribeiro@saga.edu.br', '$2a$12$iNmiTXuWVxfM37uY4JANjS', 'Analista de Atendimento', TRUE, FALSE, 'tk_duda_3341'),
+('Felipe Augusto Costa', 'felipe.costa@saga.edu.br', '$2a$12$jOmiTXuWVxfM37uY4JANjT', 'Instrutor de Eletrotécnica', TRUE, FALSE, NULL),
+('Gabriela Santos', 'gabriela.santos@saga.edu.br', '$2a$12$kPmiTXuWVxfM37uY4JANjU', 'Orientadora Educacional', FALSE, TRUE, NULL),
+('Heitor Almeida', 'heitor.almeida@saga.edu.br', '$2a$12$lQmiTXuWVxfM37uY4JANjV', 'Suporte Técnico', TRUE, FALSE, 'tk_heitor_7712'),
+('Isabela Martins', 'isabela.martins@saga.edu.br', '$2a$12$mRmiTXuWVxfM37uY4JANjW', 'Assistente Administrativo', FALSE, FALSE, NULL),
+('João Pedro Carvalho', 'joao.carvalho@saga.edu.br', '$2a$12$nSmiTXuWVxfM37uY4JANjX', 'Instrutor de Mecânica', TRUE, FALSE, NULL),
+('Larissa Ferreira', 'larissa.ferreira@saga.edu.br', '$2a$12$oTmiTXuWVxfM37uY4JANjY', 'Supervisora Pedagógica', FALSE, TRUE, 'tk_lari_5521'),
+('Lucas Oliveira', 'lucas.oliveira@saga.edu.br', '$2a$12$pUmiTXuWVxfM37uY4JANjZ', 'Instrutor de Gestão', TRUE, FALSE, NULL),
+('Mariana Rocha', 'mariana.rocha@saga.edu.br', '$2a$12$qVmiTXuWVxfM37uY4JANjA', 'Psicóloga Escolar', TRUE, TRUE, NULL),
+('Nicolas Pereira', 'nicolas.pereira@saga.edu.br', '$2a$12$rWmiTXuWVxfM37uY4JANjB', 'Instrutor de Robótica', FALSE, FALSE, 'tk_nico_9081'),
+('Patricia Barbosa', 'patricia.barbosa@saga.edu.br', '$2a$12$sXmiTXuWVxfM37uY4JANjC', 'Secretária Acadêmica', TRUE, FALSE, NULL),
+('Ricardo Alves', 'ricardo.alves@saga.edu.br', '$2a$12$tYmiTXuWVxfM37uY4JANjD', 'Coordenador de Cursos', FALSE, FALSE, NULL),
+('Sofia Ramos', 'sofia.ramos@saga.edu.br', '$2a$12$uZmiTXuWVxfM37uY4JANjE', 'Pedagoga', TRUE, FALSE, 'tk_sofia_1123'),
+('Tiago Fernandes', 'tiago.fernandes@saga.edu.br', '$2a$12$vAmiTXuWVxfM37uY4JANjF', 'Instrutor de Logística', FALSE, FALSE, NULL),
+('Vanessa Castro', 'vanessa.castro@saga.edu.br', '$2a$12$wBmiTXuWVxfM37uY4JANjG', 'Analista NEP', TRUE, TRUE, NULL),
+('William Gomes', 'william.gomes@saga.edu.br', '$2a$12$xCmiTXuWVxfM37uY4JANjH', 'Instrutor de Automação', TRUE, FALSE, 'tk_will_4401'),
+('Yasmin Farias', 'yasmin.farias@saga.edu.br', '$2a$12$yDmiTXuWVxfM37uY4JANjI', 'Assistente Pedagógica', FALSE, FALSE, NULL),
+('Zé Carlos Machado', 'zecarlos.machado@saga.edu.br', '$2a$12$zEmiTXuWVxfM37uY4JANjJ', 'Diretor de Ensino', TRUE, FALSE, NULL),
+('Amanda Duarte', 'amanda.duarte@saga.edu.br', '$2a$12$aFmiTXuWVxfM37uY4JANjK', 'Instrutora de Design', FALSE, TRUE, 'tk_amanda_6631'),
+('Bernardo Vieira', 'bernardo.vieira@saga.edu.br', '$2a$12$bGmiTXuWVxfM37uY4JANjL', 'Instrutor de Segurança do Trabalho', TRUE, FALSE, NULL),
+('Camila Nogueira', 'camila.nogueira@saga.edu.br', '$2a$12$cHmiTXuWVxfM37uY4JANjM', 'Pedagoga', FALSE, FALSE, NULL);
