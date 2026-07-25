@@ -38,40 +38,86 @@ CREATE TABLE curso(
     ) NOT NULL
 );
 
+/*
+                  Tabela/Legenda
+
+          AZUL: Pertence a tabela em si;
+          AMARELO: Atendimento Geral;
+      AMARELO E VERDE Acompanhamento Pédagógico;
+
+================================================
+  -- AZUL: Pertence a tabela em si:
+
+      id_registro_pk
+      id_usuario_fk
+      id_curso_fk
+      tipo_relatorio
+      data_conclusao
+================================================
+
+================================================
+  -- AAMARELO: Atendimento Geral:
+
+      status_registro
+      turno
+      modalidade
+      data_inicial
+      data_encerramento
+      turma
+      tipo_atendimento
+      pedagogo
+      instrutor_aluno
+      coordenacao
+      tratativa_nep
+      descricao
+================================================
+
+================================================
+  -- AMARELO E VERDE Acompanhamento Pédagógico:
+
+      tipo_acao
+      tipo_contratacao
+      relatorio
+      docente
+================================================
+
+*/
+
 CREATE TABLE registro_pedagogico(
-	id_registro_pk INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario_fk INT NOT NULL,
-    id_curso_fk INT,
+	id_registro_pk INT PRIMARY KEY AUTO_INCREMENT, -- AZUL
+    id_usuario_fk INT NOT NULL, -- AZUL
+    id_curso_fk INT, -- AZUL
     
-    tipo_relatorio ENUM(
+    tipo_relatorio ENUM( -- AZUL
 		'atendimento_geral', 
 		'acompanhamento_pedagogico'
     ) NOT NULL,
     
-    status_registro ENUM(
+    status_registro ENUM( -- AMARELO
 		'pendente', 
 		'andamento', 
 		'finalizado'
     ) NOT NULL,
     
-    turno ENUM(
+    turno ENUM( -- AMARELO
 		'manha', 
         'tarde', 
         'noite'
     ),
     
-    modalidade ENUM(
+    modalidade ENUM( -- AMARELO
 		'presencial', 
         'ead', 
         'hibrido'
     ),
     
-    data_inicial DATE NOT NULL,
-    data_encerramento DATE NULL,
-    data_conclusao TIMESTAMP,
-    turma VARCHAR(30),
+    data_inicial DATE NOT NULL, -- AMARELO
+    data_encerramento DATE NULL, -- AMARELO
+    data_conclusao TIMESTAMP, -- AZUL
+
+    turma VARCHAR(30), -- AMARELO
     
-    tipo_atendimento ENUM(
+    tipo_atendimento ENUM( -- AMARELO
 		'acolhimento', 
 		'acompanhamento', 
 		'afastamento_temporario', 
@@ -95,18 +141,18 @@ CREATE TABLE registro_pedagogico(
 
     ),
     
-    tipo_acao ENUM(
+    tipo_acao ENUM( -- VERDE
 		'acompanhamento_docente_turma', 
         'docente'
     ),
     
-    tipo_contratacao ENUM(
+    tipo_contratacao ENUM( -- VERDE
 		'horista', 
         'mensalista', 
         'rsa'
     ),
     
-    relatorio ENUM(
+    relatorio ENUM( -- VERDE
 		'na', 
 		'arquivado', 
 		'andamento', 
@@ -114,15 +160,17 @@ CREATE TABLE registro_pedagogico(
 		'observacoes' 
     ),
     
-    pedagogo VARCHAR(120),
-    instrutor_aluno VARCHAR(120),
-    coordenacao VARCHAR(120),
-    docente VARCHAR(120),
-    tratativa_nep TEXT,
-    descricao TEXT,
+    pedagogo VARCHAR(120), -- AMARELO
+    instrutor_aluno VARCHAR(120), -- AMARELO
+    coordenacao VARCHAR(120), -- AMARELO
+
+    docente VARCHAR(120), -- VERDE
+
+    tratativa_nep TEXT, -- AMARELO
+    descricao TEXT, -- AMARELO
     
-    FOREIGN KEY(id_usuario_fk) REFERENCES usuario(id_usuario_pk),
-    FOREIGN KEY(id_curso_fk) REFERENCES curso(id_curso_pk)
+    FOREIGN KEY(id_usuario_fk) REFERENCES usuario(id_usuario_pk), -- AZUL
+    FOREIGN KEY(id_curso_fk) REFERENCES curso(id_curso_pk) -- AZUL
 );
 
 INSERT INTO usuario (
@@ -134,28 +182,53 @@ INSERT INTO usuario (
     preferencia_contraste, 
     token_lembrar_me
 ) VALUES
+
 ('Ana Clara Souza', 'ana.souza@saga.edu.br', '$2a$12$eImiTXuWVxfM37uY4JANjO', 'Pedagoga', TRUE, FALSE, NULL),
+
 ('Bruno Henrique Lima', 'bruno.lima@saga.edu.br', '$2a$12$fKmiTXuWVxfM37uY4JANjP', 'Coordenador Pedagógico', FALSE, FALSE, 'tk_bruno_9812'),
+
 ('Carla Mendes', 'carla.mendes@saga.edu.br', '$2a$12$gLmiTXuWVxfM37uY4JANjQ', 'Instrutora de TI', TRUE, TRUE, NULL),
+
 ('Diego Rodrigues', 'diego.rodrigues@saga.edu.br', '$2a$12$hMmiTXuWVxfM37uY4JANjR', 'Gerente Escolar', FALSE, FALSE, NULL),
+
 ('Eduarda Ribeiro', 'eduarda.ribeiro@saga.edu.br', '$2a$12$iNmiTXuWVxfM37uY4JANjS', 'Analista de Atendimento', TRUE, FALSE, 'tk_duda_3341'),
+
 ('Felipe Augusto Costa', 'felipe.costa@saga.edu.br', '$2a$12$jOmiTXuWVxfM37uY4JANjT', 'Instrutor de Eletrotécnica', TRUE, FALSE, NULL),
+
 ('Gabriela Santos', 'gabriela.santos@saga.edu.br', '$2a$12$kPmiTXuWVxfM37uY4JANjU', 'Orientadora Educacional', FALSE, TRUE, NULL),
+
 ('Heitor Almeida', 'heitor.almeida@saga.edu.br', '$2a$12$lQmiTXuWVxfM37uY4JANjV', 'Suporte Técnico', TRUE, FALSE, 'tk_heitor_7712'),
+
 ('Isabela Martins', 'isabela.martins@saga.edu.br', '$2a$12$mRmiTXuWVxfM37uY4JANjW', 'Assistente Administrativo', FALSE, FALSE, NULL),
+
 ('João Pedro Carvalho', 'joao.carvalho@saga.edu.br', '$2a$12$nSmiTXuWVxfM37uY4JANjX', 'Instrutor de Mecânica', TRUE, FALSE, NULL),
+
 ('Larissa Ferreira', 'larissa.ferreira@saga.edu.br', '$2a$12$oTmiTXuWVxfM37uY4JANjY', 'Supervisora Pedagógica', FALSE, TRUE, 'tk_lari_5521'),
+
 ('Lucas Oliveira', 'lucas.oliveira@saga.edu.br', '$2a$12$pUmiTXuWVxfM37uY4JANjZ', 'Instrutor de Gestão', TRUE, FALSE, NULL),
+
 ('Mariana Rocha', 'mariana.rocha@saga.edu.br', '$2a$12$qVmiTXuWVxfM37uY4JANjA', 'Psicóloga Escolar', TRUE, TRUE, NULL),
+
 ('Nicolas Pereira', 'nicolas.pereira@saga.edu.br', '$2a$12$rWmiTXuWVxfM37uY4JANjB', 'Instrutor de Robótica', FALSE, FALSE, 'tk_nico_9081'),
+
 ('Patricia Barbosa', 'patricia.barbosa@saga.edu.br', '$2a$12$sXmiTXuWVxfM37uY4JANjC', 'Secretária Acadêmica', TRUE, FALSE, NULL),
+
 ('Ricardo Alves', 'ricardo.alves@saga.edu.br', '$2a$12$tYmiTXuWVxfM37uY4JANjD', 'Coordenador de Cursos', FALSE, FALSE, NULL),
+
 ('Sofia Ramos', 'sofia.ramos@saga.edu.br', '$2a$12$uZmiTXuWVxfM37uY4JANjE', 'Pedagoga', TRUE, FALSE, 'tk_sofia_1123'),
+
 ('Tiago Fernandes', 'tiago.fernandes@saga.edu.br', '$2a$12$vAmiTXuWVxfM37uY4JANjF', 'Instrutor de Logística', FALSE, FALSE, NULL),
+
 ('Vanessa Castro', 'vanessa.castro@saga.edu.br', '$2a$12$wBmiTXuWVxfM37uY4JANjG', 'Analista NEP', TRUE, TRUE, NULL),
+
 ('William Gomes', 'william.gomes@saga.edu.br', '$2a$12$xCmiTXuWVxfM37uY4JANjH', 'Instrutor de Automação', TRUE, FALSE, 'tk_will_4401'),
+
 ('Yasmin Farias', 'yasmin.farias@saga.edu.br', '$2a$12$yDmiTXuWVxfM37uY4JANjI', 'Assistente Pedagógica', FALSE, FALSE, NULL),
+
 ('Zé Carlos Machado', 'zecarlos.machado@saga.edu.br', '$2a$12$zEmiTXuWVxfM37uY4JANjJ', 'Diretor de Ensino', TRUE, FALSE, NULL),
+
 ('Amanda Duarte', 'amanda.duarte@saga.edu.br', '$2a$12$aFmiTXuWVxfM37uY4JANjK', 'Instrutora de Design', FALSE, TRUE, 'tk_amanda_6631'),
+
 ('Bernardo Vieira', 'bernardo.vieira@saga.edu.br', '$2a$12$bGmiTXuWVxfM37uY4JANjL', 'Instrutor de Segurança do Trabalho', TRUE, FALSE, NULL),
+
 ('Camila Nogueira', 'camila.nogueira@saga.edu.br', '$2a$12$cHmiTXuWVxfM37uY4JANjM', 'Pedagoga', FALSE, FALSE, NULL);
