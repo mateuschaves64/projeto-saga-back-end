@@ -1,9 +1,9 @@
--- Respondendo perguntas norteadoras:
-
 							-- ====================================================================
 														-- 1. ETAPA
 							-- ====================================================================
 /*
+
+-- Respondendo perguntas norteadoras:
 
 Revisão da 1FN (Atomicidade): No nosso banco de dados temos uma tabela associativa chamada "usuario_curso". Nesta tabela, fazemos a ligação entre o usuário e o curso para evitar o conflito de vários usuários (N) possuem (ou estão matriculados) em vários cursos (N) diferentes.
 
@@ -13,9 +13,19 @@ Revisão da 3FN (Dependência Transitiva): Todos os campos atuais de todas as no
 
 */
 
--- ====================================================================
--- 1. CRIANDO AS TABELAS + DB: REGISTRO, USUARIO, CURSO USUARIO_CURSO
--- ====================================================================
+							-- ====================================================================
+														-- 1.1 OBS
+							-- ====================================================================
+
+-- RELATÓRIO 3 NÃO SERÁ REALIZADO
+
+/* 
+Durante a criação e povoamento do banco de dados, tivemos o registro apenas de três tabelas principais que compoem o nosso sistema.
+O nosso sistema conta apenas com três tabelas principais, uma de cursos ofertados pela unidade onde o sistema é destinado a operação, uma segunda, ligada a primeira com
+registros pedagógicos da unidade, com operações da unidade, como entrevistas, ocorrências e etc, e uma terceira, ligada a segunda com os registros de usuários desse sistema.
+Por isso, não foi possível realizar o terceiro relatório com o JOIN de 4 (ou mais) tabelas.
+*/	
+
 
 /*
                   Tabela/Legenda
@@ -65,7 +75,13 @@ Revisão da 3FN (Dependência Transitiva): Todos os campos atuais de todas as no
 							-- ====================================================================
 														-- 2. ETAPA
 							-- ====================================================================
-                            
+
+
+
+-- ====================================================================
+-- 2.1 CRIANDO AS TABELAS + DB: REGISTRO, USUARIO, CURSO USUARIO_CURSO
+-- ====================================================================
+
 CREATE DATABASE tcc_saga_db;
 
 USE tcc_saga_db;
@@ -188,7 +204,7 @@ CREATE TABLE registro_pedagogico(
                             
                             
 -- ==========================================
--- POVOANDO A TABELA CURSO (CATÁLOGO)
+-- 3.1 POVOANDO A TABELA CURSO (CATÁLOGO)
 -- ==========================================
 
 INSERT INTO curso (nome_curso, tipo_curso) VALUES
@@ -247,7 +263,7 @@ INSERT INTO curso (nome_curso, tipo_curso) VALUES
 
 
 -- ==========================================
--- POVOANDO A TABELA USUÁRIO
+-- 3.2 POVOANDO A TABELA USUÁRIO
 -- ==========================================
 
 INSERT INTO usuario (
@@ -288,7 +304,7 @@ INSERT INTO usuario (
 
 
 -- ==========================================
--- POVOANDO A TABELA REGISTRO_PEDAGOGICO
+-- 3.3 POVOANDO A TABELA REGISTRO_PEDAGOGICO
 -- ==========================================
 
 INSERT INTO registro_pedagogico (
@@ -797,7 +813,7 @@ NULL,
 
 
 -- ==========================================
--- SIMULAÇÃO DE ALTERAÇÃO E REMOÇÃO
+-- 3.4 SIMULAÇÃO DE ALTERAÇÃO E REMOÇÃO
 -- ==========================================
 
 -- Atualização Crítica (UPDATE)
@@ -817,12 +833,14 @@ DELETE FROM usuario WHERE id_usuario_pk = 22;
                             
 
 -- ==========================================
--- RELATÓRIO 1
+-- 4.1 RELATÓRIO 1
+
 /*
 Traga o nome dos usuários, o tipo de curso e os dados mais importantes da tabela de registro.
 OBS: Não traga valores nulos. O tipo de curso precisa ser Técnico. Ordene pelo nome do usuário em 
 ordem Alfabética.
 */
+
 -- ==========================================
 
 SELECT 
@@ -846,7 +864,7 @@ WHERE curso.tipo_curso = 'tecnico' AND registro_pedagogico.data_encerramento IS 
 ORDER BY usuario.nome_completo;
 
 -- ==========================================
--- RELATÓRIO 2
+-- 4.2 RELATÓRIO 2
 -- selecionar todos os usuários e os registros, tendo correspondências ou não
 -- ==========================================
 
@@ -865,11 +883,3 @@ FROM usuario
 	LEFT JOIN registro_pedagogico 
 ON usuario.id_usuario_pk = registro_pedagogico.id_usuario_fk
 ORDER BY usuario.nome_completo;
-
--- ==========================================
--- RELATÓRIO 3
--- Durante o registro e povoamento do banco de dados, tivemos o registro apenas de três tabelas principais que compoem o nosso sistema.
-O nosso sistema conta apenas com três tabelas principais, uma de cursos ofertados pela unidade onde o sistema é destinado a operação, uma segunda, ligada a primeira com
-registros pedagógicos da unidade, com operações da unidade, como entrevistas, ocorrências e etc, e uma terceira, também ligada a primeira com os registros de usuários desse sistema.
-	
--- ==========================================
