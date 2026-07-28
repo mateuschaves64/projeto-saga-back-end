@@ -79,7 +79,7 @@ Por isso, não foi possível realizar o terceiro relatório com o JOIN de 4 (ou 
 
 
 -- ====================================================================
--- 2.1 CRIANDO AS TABELAS + DB: REGISTRO, USUARIO, CURSO USUARIO_CURSO
+-- 2.1 CRIANDO AS TABELAS + DB: REGISTRO, USUARIO, CURSO
 -- ====================================================================
 
 CREATE DATABASE tcc_saga_db;
