@@ -865,3 +865,11 @@ FROM usuario
 	LEFT JOIN registro_pedagogico 
 ON usuario.id_usuario_pk = registro_pedagogico.id_usuario_fk
 ORDER BY usuario.nome_completo;
+
+-- ==========================================
+-- RELATÓRIO 3
+-- Durante o registro e povoamento do banco de dados, tivemos o registro apenas de três tabelas principais que compoem o nosso sistema.
+O nosso sistema conta apenas com três tabelas principais, uma de cursos ofertados pela unidade onde o sistema é destinado a operação, uma segunda, ligada a primeira com
+registros pedagógicos da unidade, com operações da unidade, como entrevistas, ocorrências e etc, e uma terceira, também ligada a primeira com os registros de usuários desse sistema.
+	
+-- ==========================================
