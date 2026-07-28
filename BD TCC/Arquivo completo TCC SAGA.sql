@@ -807,7 +807,9 @@ UPDATE usuario SET preferencia_contraste = TRUE WHERE id_usuario_pk = 4;
 -- Exclusão Segura (DELETE)
 DELETE FROM registro_pedagogico WHERE id_usuario_fk = 22;
 DELETE FROM usuario WHERE id_usuario_pk = 22;
+
 -- Como a tabela registro pedagogico possuia uma chave estrangeira referenciando a chave primaria de usuário, apagou-se primeiro a chave estrangeira armazenada em registro pedagogico para procedir com a deleção do usuario.
+
 
 							-- ====================================================================
 														-- 4. ETAPA
@@ -816,13 +818,50 @@ DELETE FROM usuario WHERE id_usuario_pk = 22;
 
 -- ==========================================
 -- RELATÓRIO 1
+/*
+Traga o nome dos usuários, o tipo de curso e os dados mais importantes da tabela de registro.
+OBS: Não traga valores nulos. O tipo de curso precisa ser Técnico. Ordene pelo nome do usuário em 
+ordem Alfabética.
+*/
 -- ==========================================
 
--- a
-
+SELECT 
+	usuario.nome_completo,
+    curso.tipo_curso,
+    
+    registro_pedagogico.tipo_relatorio,
+    registro_pedagogico.status_registro,
+    registro_pedagogico.data_inicial,
+    registro_pedagogico.data_encerramento,
+    registro_pedagogico.data_conclusao,
+    registro_pedagogico.tratativa_nep,
+    registro_pedagogico.descricao
+    
+FROM usuario 
+	INNER JOIN registro_pedagogico
+ON usuario.id_usuario_pk = registro_pedagogico.id_usuario_fk
+	INNER JOIN curso 
+ON curso.id_curso_pk = registro_pedagogico.id_curso_fk
+WHERE curso.tipo_curso = 'tecnico' AND registro_pedagogico.data_encerramento IS NOT NULL 
+ORDER BY usuario.nome_completo;
 
 -- ==========================================
 -- RELATÓRIO 2
+-- selecionar todos os usuários e os registros, tendo correspondências ou não
 -- ==========================================
 
--- A
+SELECT 
+	usuario.nome_completo, 
+
+    registro_pedagogico.tipo_relatorio,
+    registro_pedagogico.status_registro,
+    registro_pedagogico.data_inicial,
+    registro_pedagogico.data_encerramento,
+    registro_pedagogico.data_conclusao,
+    registro_pedagogico.tratativa_nep,
+    registro_pedagogico.descricao
+
+FROM usuario
+	LEFT JOIN registro_pedagogico 
+ON usuario.id_usuario_pk = registro_pedagogico.id_usuario_fk
+ORDER BY usuario.nome_completo;
