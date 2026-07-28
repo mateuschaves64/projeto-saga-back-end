@@ -801,10 +801,13 @@ NULL,
 -- ==========================================
 
 -- Atualização Crítica (UPDATE)
--- a
+UPDATE usuario SET preferencia_tema = FALSE WHERE id_usuario_pk = 1;
+UPDATE usuario SET preferencia_contraste = TRUE WHERE id_usuario_pk = 4;
 
 -- Exclusão Segura (DELETE)
--- a
+DELETE FROM registro_pedagogico WHERE id_usuario_fk = 22;
+DELETE FROM usuario WHERE id_usuario_pk = 22;
+-- Como a tabela registro pedagogico possuia uma chave estrangeira referenciando a chave primaria de usuário, apagou-se primeiro a chave estrangeira armazenada em registro pedagogico para procedir com a deleção do usuario.
 
 							-- ====================================================================
 														-- 4. ETAPA
