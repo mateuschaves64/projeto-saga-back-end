@@ -1,18 +1,16 @@
-import { Router } from 'express';
+// routes/dashboardRoutes.js
+import express from 'express';
 import { getRegistroPedagogico } from '../controllers/dashboardController.js';
-import { getRegistroPedagogicoSchema } from '../schemas/dashboardSchema.js';
-import { validate } from '../middleware/validate.js'; // Middleware padrão de validação
+import { getRegistroPedagogicoSchema } from '../schemas/dashboardSchemas.js';
+import { validate } from '../middleware/validate.js';
 
+const router = express.Router();
 
-const router = Router();
-
-
-// Rota Única: GET /dashboard/registro_pedagogico
+// GET /dashboard/registro_pedagogico
 router.get(
   '/registro_pedagogico',
   validate(getRegistroPedagogicoSchema),
   getRegistroPedagogico
 );
-
 
 export default router;
