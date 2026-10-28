@@ -91,7 +91,6 @@ CREATE TABLE usuario(
     nome_completo VARCHAR(120) NOT NULL,
     email_usu VARCHAR(150) UNIQUE NOT NULL,
     senha_usu VARCHAR(255) NOT NULL,
-    funcao_atual VARCHAR(50) NOT NULL,
     preferencia_tema BOOLEAN,
     preferencia_contraste BOOLEAN,
     token_lembrar_me VARCHAR(255)
@@ -269,8 +268,7 @@ INSERT INTO curso (nome_curso, tipo_curso) VALUES
 INSERT INTO usuario (
     nome_completo, 
     email_usu, 
-    senha_usu, 
-    funcao_atual, 
+    senha_usu,
     preferencia_tema, 
     preferencia_contraste, 
     token_lembrar_me
