@@ -1,52 +1,57 @@
-import {relatorioService} from '../services/relatorioService.js';
+import { relatorioService } from "../services/relatorioService.js";
 
+// PATCH /historico/registro_pedagogico/:id (Edição extemporânea com trava de 24h)
 export const updateHistorico = async (req, res) => {
-    try{
-        const {id} = req.params;
-        const dadosAtualziados = req.body;
+  try {
+    const { id } = req.params;
+    const dadosAtualizacao = req.body;
 
-        const registroExistente = await relatorioService.buscarRegistroPorId(id);
+    // 1. Busca o registro existente no mock/banco
+    const registroExistente = await relatorioService.buscarRegistroPorId(id);
 
-        if(!registroExistente){
-            return res.status(404).json({message: 'Registro não encontrado.'});
+    if (!registroExistente) {
+      return res.status(404).json({ message: 'Registro pedagógico não encontrado.' });
     }
-}
-}  
 
-const dataCriacao = new Date(registroExistente.data_inicial);
-const agora = new Date();
-const diferencaEmhORAS = (agora - dataCriacao) / (1000 * 60 * 60);
+    // 2. Trava de 24 horas para edição extemporânea
+    const dataCriacao = new Date(registroExistente.data_inicial);
+    const agora = new Date();
+    const diferencaEmHoras = (agora - dataCriacao) / (1000 * 60 * 60);
 
-if (diferencaEmhORAS > 24) {
-    return res.status(403).json({message: "Ação não permitida: o passo de 24 horas para alteração expirou"
-    });
-}
+    if (diferencaEmHoras > 24) {
+      return res.status(403).json({
+        message: 'Ação não permitida: o prazo de 24 horas para alteração expirou'
+      });
+    }
 
-const registroAtualizado = await relatorioService.atualizarRegistro(id, dadosAtualizacao);
+    // 3. Atualiza o registro
+    const registroAtualizado = await relatorioService.atualizarRegistro(id, dadosAtualizacao);
 
-return res.status(200).json({
-    message: "Registro atualizado com sucesso.", 
-    data: registroAtualizado}); 
-    
-} catch(error){
-    console.error('Erro em UpdateHistorico', error);
-    return res.status(500).json({message: 'Erro interno de servidor ao atualizar o histórico.'});
+    return res.status(200).json(registroAtualizado);
+
+  } catch (error) {
+    console.error('Erro em updateHistorico:', error);
+    return res.status(500).json({ message: 'Erro interno do servidor ao atualizar o histórico.' });
+  }
 };
 
+// DELETE /historico/registro_pedagogico/:id (Exclusão por ID)
 export const deleteHistorico = async (req, res) => {
-    try{
-        const {id} = req.params;
+  try {
+    const { id } = req.params;
 
-        const deletado = await relatorioService.deletarRegistro(id);
+    // 1. Tenta deletar o registro
+    const deletado = await relatorioService.deletarRegistro(id);
 
-        id(!deletado){
-            return res.status(404).json({message: 'Registro pedagógico não encontrado para exclusão.'});
-        
-        };
+    if (!deletado) {
+      return res.status(404).json({ message: 'Registro pedagógico não encontrado para exclusão.' });
     }
 
-    return res.status(204).json({message: 'Registro pedagógico excluído com sucesso.'});
-}catch(error){
-    console.error('Erro em deleteHistorico', error);
-    return res.status(500).json({message: 'Erro interno de servidor ao excluir o histórico.'});
-}
+    // 2. Retorna 204 No Content (Sem corpo na resposta conforme especificação HTTP)
+    return res.status(204).send();
+
+  } catch (error) {
+    console.error('Erro em deleteHistorico:', error);
+    return res.status(500).json({ message: 'Erro interno do servidor ao excluir o histórico.' });
+  }
+};

@@ -1,9 +1,7 @@
 import { z } from 'zod';
 
-
 // Regex para validação de data simples no formato YYYY-MM-DD
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-
 
 export const getRegistroPedagogicoSchema = z.object({
   query: z.object({
@@ -17,20 +15,29 @@ export const getRegistroPedagogicoSchema = z.object({
       .regex(dateRegex, { message: 'dataFim deve estar no formato YYYY-MM-DD' })
       .optional(),
 
+    // Aceita o ID do curso vindo da URL/Query (ex: ?idCurso=4) e converte para número
+    idCurso: z
+      .coerce
+      .number({ message: 'idCurso deve ser um número válido' })
+      .positive()
+      .optional(),
 
-    // Ajuste/adicione os valores permitidos do curso conforme o seu ENUM do banco/sistema
+    // Aceita busca por nome do curso ou tipo
     curso: z
-      .enum(['MECANICA', 'ELETROTECNICA', 'INFORMATICA', 'EDIFICACOES'])
+      .string()
+      .min(1, { message: 'curso não pode ser uma string vazia' })
       .optional(),
 
-
-    // Tipo de relatório ENUM (A ou B)
+    // Tipos de relatórios reais do relatorioService
     tipo: z
-      .enum(['A', 'B'])
+      .enum(['atendimento_geral', 'acompanhamento_pedagogico'], {
+        errorMap: () => ({ message: "tipo deve ser 'atendimento_geral' ou 'acompanhamento_pedagogico'" })
+      })
       .optional(),
-  }).refine(
+  })
+  .refine(
     (data) => {
-      // Regra: Se dataInicio for informado, dataFim passa a ser obrigatório
+      // Regra 1: Se dataInicio for informado, dataFim passa a ser obrigatório
       if (data.dataInicio && !data.dataFim) {
         return false;
       }
@@ -38,7 +45,20 @@ export const getRegistroPedagogicoSchema = z.object({
     },
     {
       message: 'dataFim é obrigatório quando dataInicio for enviado',
-      path: ['dataFim'], // Aponta o erro para o campo dataFim
+      path: ['dataFim'],
+    }
+  )
+  .refine(
+    (data) => {
+      // Regra 2: dataFim não pode ser menor que dataInicio
+      if (data.dataInicio && data.dataFim) {
+        return new Date(data.dataFim) >= new Date(data.dataInicio);
+      }
+      return true;
+    },
+    {
+      message: 'dataFim deve ser igual ou posterior a dataInicio',
+      path: ['dataFim'],
     }
   )
 });

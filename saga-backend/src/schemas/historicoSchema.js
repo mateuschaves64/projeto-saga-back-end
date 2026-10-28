@@ -1,40 +1,47 @@
-import {z} from 'zod';
+import { z } from 'zod';
 
+// Schema para rotas que recebem apenas :id na URL (ex: DELETE)
 export const idParamSchema = z.object({
-    params: z.object({
-        id: z.coerce.number({invalid_type_error: "O ID precisa ser um número"})
-        .int("O ID deve ser um número inteiro")
-        .positive("O ID deve ser um número positivo"),
-    })
+  params: z.object({
+    id: z.coerce
+      .number({ invalid_type_error: "O ID precisa ser um número" })
+      .int("O ID deve ser um número inteiro")
+      .positive("O ID deve ser um número positivo")
+  })
 });
 
+// Schema para a atualização extemporânea (PATCH com :id na URL + req.body)
 export const updateHistoricoSchema = z.object({
-    params: z.object ({
-        id: z.coerce.number({invalid_type_error: "O ID precisa ser um número"})
-            .int("O ID deve ser um número inteiro")
-            .positive("O ID deve ser um número positivo"),
-    }),
-    body: z.object({
-       tipo_relatorio: z.enum([]).optional(),
-        status: z.enum(["PENDENTE", "EM_ANDAMENTO", "CONCLUIDO"]), 
-        { errorMap: () => ({ message: "O status deve ser PENDENTE, EM_ANDAMENTO ou CONCLUIDO" })},
-
-        turno: z.enum(["MANHA", "TARDE", "NOITE"]).optional(), 
-        modalidade: z.enum([]).optional(),
-        data_inicial: z.string().datetime({message: "A data inicial é obrigatória"}),
-        data_conclusao: z.string().datetime().optional(),
-
-        turma: z.string().optional().min(3, "A turma deve ter no mínimo 3 caracteres").max(30, "A turma deve ter no máximo 30 caracteres"),
-        tipo_atendimento: z.enum([]).optional(),
-        tipo_acao: z.enum([]).optional(),
-        tipo_contratacao: z.enum([]).optional(),
-        relatorio: z.enum([]).optional(),
-        
-        pedagogo: z.string.min(2, "O pedagogo deve ter no mínimo 2 caracteres").max(120, "O pedagogo deve ter no máximo 120 caracteres").optional(),
-        instrutor_aluno: z.string.min(2, "O instrutor/aluno deve ter no mínimo 2 caracteres").max(120, "O instrutor/aluno deve ter no máximo 120 caracteres").optional(),
-        coordenador: z.string.min(2, "O coordenador deve ter no mínimo 2 caracteres").max(120, "O coordenador deve ter no máximo 120 caracteres").optional(),
-        docente: z.string().min(2, "O docente deve ter no mínimo 2 caracteres").max(120, "O docente deve ter no máximo 120 caracteres").optional(),
-        tratativa_nep: z.string().min(5, "A tratativa do NEP deve ter no mínimo 3 caracteres").max(4096, "A tratativa do NEP deve ter no máximo 4096 caracteres").optional(),
-        descricao: z.string().min(5, "A descrição deve ter no mínimo 5 caracteres").max(4096, "A descrição deve ter no máximo 4096 caracteres").optional(),
-    })
+  params: z.object({
+    id: z.coerce
+      .number({ invalid_type_error: "O ID precisa ser um número" })
+      .int("O ID deve ser um número inteiro")
+      .positive("O ID deve ser um número positivo")
+  }),
+  body: z.object({
+    tipo_relatorio: z.enum(["atendimento_geral", "acompanhamento_pedagogico"]).optional(),
+    status_registro: z.enum(["pendente", "andamento", "finalizado"]).optional(),
+    turno: z.enum(["manha", "tarde", "noite"]).optional().nullable(),
+    modalidade: z.enum(["presencial", "ead", "hibrido"]).optional().nullable(),
+    data_inicial: z.string().optional(),
+    data_encerramento: z.string().optional().nullable(),
+    turma: z.string().min(3, "A turma deve ter no mínimo 3 caracteres").max(30).optional().nullable(),
+    tipo_atendimento: z.enum([
+      "acolhimento", "acompanhamento", "afastamento_temporario", "advertencia",
+      "ambientacao_docente", "aplicacao_de_pesquisa", "apoio_a_coordenacao",
+      "atendimento_emergencial", "boas_vindas", "calcado_inadequado",
+      "fardamento_inadequado", "intervencao_pedagogica", "miniaula", "na",
+      "orientacao_aluno", "orientacao_reuniao_instrutora", "outros", "pais_resp",
+      "reuniao", "visita_pedagogica"
+    ]).optional().nullable(),
+    tipo_acao: z.enum(["acompanhamento_docente_turma", "docente"]).optional().nullable(),
+    tipo_contratacao: z.enum(["horista", "mensalista", "rsa"]).optional().nullable(),
+    relatorio: z.enum(["na", "arquivado", "andamento", "falta_feedback", "observacoes"]).optional().nullable(),
+    pedagogo: z.string().min(2, "O pedagogo deve ter no mínimo 2 caracteres").max(120).optional().nullable(),
+    instrutor_aluno: z.string().min(2).max(120).optional().nullable(),
+    coordenacao: z.string().min(2).max(120).optional().nullable(),
+    docente: z.string().min(2).max(120).optional().nullable(),
+    tratativa_nep: z.string().min(3).max(4096).optional().nullable(),
+    descricao: z.string().min(5).max(4096).optional().nullable()
+  })
 });

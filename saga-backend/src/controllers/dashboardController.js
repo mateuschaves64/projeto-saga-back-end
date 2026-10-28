@@ -1,34 +1,24 @@
+// dashboardController.js
+import { relatorioService } from '../services/relatorioService.js';
+
 export const getRegistroPedagogico = async (req, res) => {
   try {
-    const { dataInicio, dataFim, curso, tipo } = req.query;
+    const { dataInicio, dataFim, curso, tipo, idCurso } = req.query;
 
-
-    // Mock de dados para simular o retorno da consulta tratada
-    const relatoriosMock = [
-      {
-        id: 1,
-        titulo: 'Relatório de Acompanhamento Didático',
-        curso: curso || 'Eletrotécnica',
-        tipo: tipo || 'A',
-        dataCriacao: dataInicio || '2026-01-15',
-        descricao: 'Acompanhamento do progresso de aprendizagem da turma.'
-      },
-      {
-        id: 2,
-        titulo: 'Avaliação de Desempenho Prático',
-        curso: curso || 'Informatica para internet',
-        tipo: tipo || 'B',
-        dataCriacao: dataFim || '2026-02-10',
-        descricao: 'Registro das notas e frequências práticas.'
-      }
-    ];
-
+    // Mapeia os parâmetros da requisição para o formato esperado pelo relatorioService
+    const dados = await relatorioService.buscarDashboard({
+      data_inicial: dataInicio,
+      data_final: dataFim,
+      curso,
+      tipo_relatorio: tipo,
+      id_curso_fk: idCurso
+    });
 
     return res.status(200).json({
       sucesso: true,
-      filtrosAplicados: { dataInicio, dataFim, curso, tipo },
-      quantidade: relatoriosMock.length,
-      dados: relatoriosMock
+      filtrosAplicados: { dataInicio, dataFim, curso, tipo, idCurso },
+      quantidade: dados.length,
+      dados
     });
   } catch (error) {
     return res.status(500).json({
