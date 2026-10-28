@@ -1,7 +1,9 @@
 import { z } from 'zod';
 
+
 // Regex para validação de data simples no formato YYYY-MM-DD
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
 
 export const getRegistroPedagogicoSchema = z.object({
   query: z.object({
@@ -15,10 +17,12 @@ export const getRegistroPedagogicoSchema = z.object({
       .regex(dateRegex, { message: 'dataFim deve estar no formato YYYY-MM-DD' })
       .optional(),
 
+
     // Ajuste/adicione os valores permitidos do curso conforme o seu ENUM do banco/sistema
     curso: z
-      .enum(['MECANICA', 'ELETROTECNICA', 'INFORMATICA'])
+      .enum(['MECANICA', 'ELETROTECNICA', 'INFORMATICA', 'EDIFICACOES'])
       .optional(),
+
 
     // Tipo de relatório ENUM (A ou B)
     tipo: z
