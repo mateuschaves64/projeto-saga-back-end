@@ -8,6 +8,8 @@ import authRoutes from './src/routes/authRoutes.js';
 import dashboardRoutes from './src/routes/dashboardRoutes.js';
 import historicoRoutes from './src/routes/historicoRoutes.js';
 import relatorioRoutes from './src/routes/relatorioRoutes.js';
+import usuarioRoutes from './src/routes/usuarioRoutes.js';
+
 
 const app = express();
 const PORT = 3000;
@@ -26,6 +28,8 @@ app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/historico', historicoRoutes);
 app.use('/relatorio', relatorioRoutes);
+app.use('/usuarios', usuarioRoutes);
+
 
 // Servidor Iniciado
 app.listen(PORT, () => {

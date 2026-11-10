@@ -56,6 +56,11 @@ export const relatorioService = {
   // 1. AUTENTICAÇÃO E USUÁRIOS
   // --------------------------------------------------
 
+// GET /usuarios
+async buscarTodosUsuarios() {
+  return usuarios.map(({ senha_usu, token_lembrar_me, ...dadosPublicos }) => dadosPublicos);
+},
+
   // POST /auth/login
   async login(email, senha, lembrarMe = false) {
     const usuario = usuarios.find(u => u.email_usu === email);
