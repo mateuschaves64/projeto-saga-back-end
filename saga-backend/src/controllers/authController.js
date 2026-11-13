@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { relatorioService } from "../services/relatorioService.js";
+import { authService } from "../services/authService.js";
 
 // Registrar Novo usuário
 export const register = async (req, res) => {
@@ -9,7 +9,7 @@ export const register = async (req, res) => {
 
         const hashedSenha = await bcrypt.hash(senha_usu, 10);
 
-        const newUser = await relatorioService.registrarUsuario({
+        const newUser = await authService.registrarUsuario({
             nome_completo,
             email_usu,
             senha_usu: hashedSenha
@@ -29,7 +29,7 @@ export const login = async (req, res) => {
     const { email_usu, senha_usu, lembrarMe = false } = req.body;
 
     // Busca o usuário no Service (array de mock)
-    const user = await relatorioService.findUserByEmail(email_usu);
+    const user = await authService.findUserByEmail(email_usu);
     if (!user) {
       return res.status(401).json({ message: "Credenciais inválidas" });
     }
@@ -42,7 +42,7 @@ export const login = async (req, res) => {
 
     // Trata a flag de "Lembrar-me" se for true
     if (lembrarMe) {
-      await relatorioService.salvarTokenLembrarMe(user.id_usuario_pk);
+      await authService.salvarTokenLembrarMe(user.id_usuario_pk);
     }
 
     // Gera o token JWT
@@ -73,7 +73,7 @@ export const logout = async (req, res) => {
     const token = req.headers.authorization.split(' ')[1].trim().replace(/^"|"$/g, '');
 
     // Invalida o token no service
-    await relatorioService.logout(token);
+    await authService.logout(token);
 
     return res.status(200).json({ message: "Logout realizado com sucesso" });
   } catch (error) {

@@ -1,10 +1,10 @@
 
-import { relatorioService } from "../services/relatorioService.js";
+import { authService } from "../services/authService.js";
 
 // GET /usuarios
 export const listarUsuarios = async (req, res) => {
   try {
-    const usuarios = await relatorioService.buscarTodosUsuarios();
+    const usuarios = await authService.buscarTodosUsuarios();
 
     return res.status(200).json({
       sucesso: true,
