@@ -1,0 +1,12 @@
+{
+  "tipo_relatorio": "acompanhamento_pedagogico",
+  "status_registro": "andamento",
+  "data_inicial": "2026-11-13",
+  "pedagogo": "Maria Oliveira",
+  "id_curso_fk": null,
+  "tipo_acao": "acompanhamento_docente_turma",
+  "tipo_contratacao": "mensalista",
+  "relatorio": "observacoes",
+  "docente": "Carlos Santos",
+  "descricao": "Registro de teste do acompanhamento pedagógico."
+}

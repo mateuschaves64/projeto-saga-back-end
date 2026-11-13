@@ -1,0 +1,54 @@
+SAGA — PACOTE DE TESTES PARA THUNDER CLIENT
+Baseado nos arquivos do back-end enviados.
+
+BASE URL
+http://localhost:3000
+
+HEADERS
+Para JSON: Content-Type: application/json
+Nas rotas privadas: Authorization: Bearer {{token}}
+
+VARIÁVEIS SUGERIDAS NO ENVIRONMENT
+baseUrl = http://localhost:3000
+token = (copiar do retorno do login)
+registroId = (copiar id_registro_pk retornado ao criar relatório)
+
+ROTAS
+POST  {{baseUrl}}/auth/register                         Pública
+POST  {{baseUrl}}/auth/login                            Pública
+POST  {{baseUrl}}/auth/logout                           PRIVADA
+POST  {{baseUrl}}/relatorio/registro_pedagogico         PRIVADA
+PATCH {{baseUrl}}/relatorio/registro_pedagogico/{{registroId}} PRIVADA
+GET   {{baseUrl}}/dashboard/registro_pedagogico         Pública
+GET   {{baseUrl}}/dashboard/registro_pedagogico?dataInicio=2026-11-01&dataFim=2026-11-30 Pública
+GET   {{baseUrl}}/dashboard/registro_pedagogico?tipo=atendimento_geral Pública
+GET   {{baseUrl}}/dashboard/registro_pedagogico?tipo=acompanhamento_pedagogico Pública
+GET   {{baseUrl}}/dashboard/registro_pedagogico?idCurso=1 Pública
+GET   {{baseUrl}}/dashboard/registro_pedagogico?curso=tecnico Pública
+PATCH {{baseUrl}}/historico/registro_pedagogico/{{registroId}} PRIVADA
+DELETE {{baseUrl}}/historico/registro_pedagogico/{{registroId}} PRIVADA
+GET   {{baseUrl}}/usuarios                              PRIVADA
+
+ORDEM DE TESTE RECOMENDADA
+1. Cadastrar usuário (01-cadastro.json).
+2. Fazer login (02-login.json) e copiar token.
+3. Criar relatório de atendimento geral (03).
+4. Criar relatório de acompanhamento pedagógico (04).
+5. Listar dashboard e testar combinações de filtros na URL.
+6. Atualizar um relatório para status_registro=finalizado (05).
+7. Testar edição no histórico (06) usando ID de registro recém-criado.
+8. Testar GET /usuarios.
+9. Testar DELETE por último, pois apaga o registro.
+
+ATENÇÃO
+- Os nomes e enum values dos JSONs seguem os Zod schemas reais.
+- id_curso_fk está null para não depender de um curso previamente cadastrado. Se quiser testar o relacionamento, troque por um id_curso_pk existente.
+- O controller de criação injeta id_usuario_fk a partir do JWT; não envie esse campo no body.
+- A data_inicial usada nos exemplos é a data atual do teste. Para o PATCH do histórico, o controller calcula a janela de 24h a partir de data_inicial; portanto use uma data/hora que mantenha a diferença dentro de 24h.
+- A API fixa PORT=3000 em server.js; PORT do env.example não é lido.
+- O cadastro duplicado aparenta retornar 500, não 409, porque o controller não repassa error.status do service.
+- O logout grava token em blacklist no service, mas authMiddleware não consulta essa blacklist; teste se o token continua aceito depois do logout.
+- O schema do dashboard tem um possível erro na validação cruzada: dataInicio/dataFim estão dentro de query, mas os refinements leem dataInicio/dataFim na raiz. Teste dataInicio sem dataFim; a validação pode não barrar como o esperado.
+- A rota PATCH do histórico retorna 403 após 24h, apesar do README listar 400/404/401/500.
+- O endpoint GET /usuarios existe no código, embora não esteja listado no resumo de rotas do README.
+- Não há rota de cursos registrada em server.js. Não há endpoint para cadastrar/listar cursos neste pacote.

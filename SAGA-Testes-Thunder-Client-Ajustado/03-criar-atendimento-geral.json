@@ -1,0 +1,16 @@
+{
+  "tipo_relatorio": "atendimento_geral",
+  "status_registro": "pendente",
+  "data_inicial": "2026-11-13",
+  "pedagogo": "Maria Oliveira",
+  "id_curso_fk": null,
+  "turno": "manha",
+  "modalidade": "presencial",
+  "data_encerramento": null,
+  "turma": "TURMA-TI-01",
+  "tipo_atendimento": "acolhimento",
+  "instrutor_aluno": "João da Silva",
+  "coordenacao": "Ana Souza",
+  "tratativa_nep": "Realizada orientação inicial e encaminhamento para acompanhamento.",
+  "descricao": "Registro de teste do atendimento geral."
+}
