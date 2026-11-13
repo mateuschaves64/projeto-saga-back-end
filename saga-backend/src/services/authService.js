@@ -1,79 +1,90 @@
-  // --------------------------------------------------
-  // 1. AUTENTICAÇÃO E USUÁRIOS
-  // --------------------------------------------------
+// --------------------------------------------------
+// 1. AUTENTICAÇÃO E USUÁRIOS
+// --------------------------------------------------
 
-// GET /usuarios
-// async buscarTodosUsuarios() {
-//   return usuarios.map(({ senha_usu, token_lembrar_me, ...dadosPublicos }) => dadosPublicos);
-// },
+import prisma from '../../db.js';
 
-  // POST /auth/login
-  // async login(email, senha, lembrarMe = false) {
-  //   const usuario = usuarios.find(u => u.email_usu === email);
+const tokensBlacklist = new Set();
 
-  //   if (!usuario) return null;
-
-  //   // Simula a geração do token de "lembrar minha senha"
-  //   if (lembrarMe) {
-  //     usuario.token_lembrar_me = `tk_lembrar_${usuario.id_usuario_pk}_${Date.now()}`;
-  //   }
-
-  //   const token = `mock_jwt_token_${usuario.id_usuario_pk}_${Date.now()}`;
-  //   const { senha_usu, ...dadosPublicos } = usuario;
-
-  //   return {
-  //     token,
-  //     usuario: dadosPublicos
-  //   };
-  // },
+export const authService = {
+  // GET /usuarios
+  async buscarTodosUsuarios() {
+    return await prisma.usuario.findMany({
+      select: {
+        id_usuario_pk: true,
+        nome_completo: true,
+        email_usu: true,
+        preferencia_contraste: true,
+        preferencia_tema: true
+      }
+    });
+  },
 
   // POST /auth/register
-  // async registrarUsuario({ email_usu, senha_usu, nome_completo }) {
-  //   const emailExiste = usuarios.some(u => u.email_usu === email_usu);
-  //   if (emailExiste) {
-  //     const error = new Error("E-mail já cadastrado");
-  //     error.status = 409;
-  //     throw error;
-  //   }
+  async registrarUsuario({ email_usu, senha_usu, nome_completo }) {
+    const emailExiste = await prisma.usuario.findUnique({
+      where: { email_usu }
+    });
 
-  //   const novoUsuario = {
-  //     id_usuario_pk: usuarios.length + 1,
-  //     nome_completo,
-  //     email_usu,
-  //     senha_usu,
-  //     preferencia_tema: false, // Light mode por padrão
-  //     preferencia_contraste: false, // Contraste normal por padrão
-  //     token_lembrar_me: null
-  //   };
+    if (emailExiste) {
+      const error = new Error("E-mail já cadastrado");
+      error.status = 409;
+      throw error;
+    }
 
-  //   usuarios.push(novoUsuario);
+    const novoUsuario = await prisma.usuario.create({
+      data: {
+        nome_completo,
+        email_usu,
+        senha_usu,
+        preferencia_tema: false,
+        preferencia_contraste: false,
+        token_lembrar_me: null
+      }
+    });
 
-  //   const { senha_usu: _, ...dadosPublicos } = novoUsuario;
-  //   return dadosPublicos;
-  // },
+    const { senha_usu: _, ...dadosPublicos } = novoUsuario;
+    return dadosPublicos;
+  },
 
   // Busca o usuário pelo e-mail
-  // async findUserByEmail(email) {
-  //   const usuario = usuarios.find(u => u.email_usu === email);
-  //   return usuario || null;
-  // },
+  async findUserByEmail(email) {
+    return await prisma.usuario.findUnique({
+      where: { email_usu: email }
+    });
+  },
+
+  // Salva o Token de "Lembrar-me" no banco
+  async salvarTokenLembrarMe(idUsuario) {
+    return await prisma.usuario.update({
+      where: { id_usuario_pk: Number(idUsuario) },
+      data: {
+        token_lembrar_me: `tk_lembrar_${idUsuario}_${Date.now()}`
+      }
+    });
+  },
 
   // POST /auth/logout
-  // async logout(token) {
-  //   if (token) {
-  //     tokensBlacklist.add(token);
-  //   }
-  //   return true;
-  // },
+  async logout(token) {
+    if (token) {
+      tokensBlacklist.add(token);
+    }
+    return true;
+  },
 
   // PATCH /usuario/configuracoes (Dark mode e Alto contraste)
-  // async atualizarPreferencias(idUsuario, { preferencia_tema, preferencia_contraste }) {
-  //   const usuario = usuarios.find(u => u.id_usuario_pk === Number(idUsuario));
-  //   if (!usuario) return null;
+  async atualizarPreferencias(idUsuario, { preferencia_tema, preferencia_contraste }) {
+    const dadosAtualizar = {};
 
-  //   if (preferencia_tema !== undefined) usuario.preferencia_tema = preferencia_tema;
-  //   if (preferencia_contraste !== undefined) usuario.preferencia_contraste = preferencia_contraste;
+    if (preferencia_tema !== undefined) dadosAtualizar.preferencia_tema = preferencia_tema;
+    if (preferencia_contraste !== undefined) dadosAtualizar.preferencia_contraste = preferencia_contraste;
 
-  //   const { senha_usu, ...dadosPublicos } = usuario;
-  //   return dadosPublicos;
-  // },
+    const usuarioAtualizado = await prisma.usuario.update({
+      where: { id_usuario_pk: Number(idUsuario) },
+      data: dadosAtualizar
+    });
+
+    const { senha_usu, ...dadosPublicos } = usuarioAtualizado;
+    return dadosPublicos;
+  }
+};
