@@ -1,11 +1,8 @@
 // src/services/cursoService.js
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-// Obs.: caso o grupo tenha criado um arquivo central de conexão na branch main (ex: src/database/prisma.js),
-// substitua as duas linhas acima por: const prisma = require('../database/prisma');
+import prisma from '../../db.js';
 
-const cursoService = {
-  // Substitui o antigo return cursos; (usado na rota GET /cursos)
+export const cursoService = {
+  // GET /cursos
   async buscarCursos() {
     try {
       return await prisma.curso.findMany({
@@ -18,7 +15,7 @@ const cursoService = {
     }
   },
 
-  // Substitui o antigo cursos.find(...) (usado na rota GET /cursos/:id)
+  // GET /cursos/:id
   async buscarCursoPorId(id) {
     try {
       return await prisma.curso.findUnique({
@@ -31,5 +28,3 @@ const cursoService = {
     }
   },
 };
-
-module.exports = cursoService;
