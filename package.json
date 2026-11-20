@@ -1,5 +1,5 @@
 {
-  "name": "hospital-triagem-backend",
+  "name": "saga-backend",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
@@ -13,7 +13,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Sistema Hospitalar & Triagem - API com regras de negócio testáveis (Jest + ESM)",
+  "description": "SAGA - API REST para registro, análise e gestão de relatórios pedagógicos (Express + Prisma + Jest)",
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.10.0",
     "@prisma/client": "^7.10.0",
