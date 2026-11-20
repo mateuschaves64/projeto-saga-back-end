@@ -91,6 +91,7 @@ npm run dev
 | `npm start` | Inicia o servidor em produção com `node server.js` |
 | `npm test` | Executa a suíte de testes unitários com Jest |
 | `npm run test:coverage` | Executa os testes com relatório de cobertura |
+| `npm run gerar-pdf` | Converte o relatório HTML dos testes em PDF (requer `puppeteer`, veja a seção de testes) |
 
 ## Variáveis de Ambiente
 
@@ -106,6 +107,93 @@ npm run dev
 | `DB_PORT` | Porta do MySQL (padrão: `3306`) |
 
 > ⚠️ Nunca envie o arquivo `.env` para o repositório. Utilize o `env.example` como modelo.
+
+---
+
+# 🧪 Testes Automatizados
+
+Os testes do back-end são **testes unitários** escritos com **Jest 30** em **ES Modules**. Eles validam as regras de negócio dos `services/` (autenticação, cursos, dashboard e relatórios).
+
+> ✅ **Não é preciso ter MySQL rodando nem arquivo `.env` para rodar os testes.** O Prisma é substituído por um banco "falso" (mock), então nada é lido ou gravado no banco real.
+
+## Como rodar os testes
+
+```bash
+# 1. Instalar as dependências (apenas na primeira vez)
+npm install
+
+# 2. Rodar todos os testes
+npm test
+
+# 3. Rodar os testes com relatório de cobertura
+npm run test:coverage
+```
+
+### Outras formas de rodar
+
+```bash
+# Rodar apenas um arquivo de teste
+npm test -- src/tests/authService.test.js
+
+# Rodar apenas os testes cujo nome contenha um trecho
+npm test -- -t "logout"
+
+# Modo observação: roda de novo a cada alteração salva
+npm test -- --watch
+```
+
+> ⚠️ Use sempre `npm test` (ou `npm run test:coverage`). Rodar `npx jest` diretamente **não funciona**, porque o projeto usa ES Modules e o script do `package.json` já inclui a flag `--experimental-vm-modules` necessária.
+
+## O que é testado
+
+| Arquivo (`src/tests/`) | Service testado | O que valida |
+| ---------------------- | --------------- | ------------ |
+| `authService.test.js` | `authService` | Listagem de usuários sem a senha, cadastro (e-mail duplicado → `409`), busca por e-mail, token do "lembrar-me", logout e preferências |
+| `cursoService.test.js` | `cursoService` | Listagem ordenada de cursos, busca por ID e tratamento de erro do banco |
+| `dashboardService.test.js` | `dashboardService` | Filtros combináveis do dashboard (tipo, curso, enum de curso, intervalo de datas) |
+| `relatorioService.test.js` | `relatorioService` | Criação, atualização (`data_conclusao` ao finalizar), exclusão e busca por ID, incluindo o erro `P2025` do Prisma |
+
+## Como os testes funcionam
+
+- Os arquivos ficam em `src/tests/` e terminam com `.test.js`.
+- O banco falso fica em `src/tests/helpers/prismaMock.js`. Se um service passar a usar um método novo do Prisma, adicione esse método no mock.
+- Cada arquivo de teste substitui o `db.js` real pelo mock **antes** de importar o service:
+
+```js
+import { jest } from '@jest/globals';
+import { prismaMock } from './helpers/prismaMock.js';
+
+jest.unstable_mockModule('../../db.js', () => ({ default: prismaMock }));
+
+// O service deve ser importado DEPOIS do mock
+const { meuService } = await import('../services/meuService.js');
+```
+
+## Relatórios gerados
+
+| Relatório | Onde fica | Quando é gerado |
+| --------- | --------- | --------------- |
+| **Relatório HTML dos testes** | `relatorio/test-report.html` | A cada execução de `npm test` ou `npm run test:coverage` |
+| **Cobertura de código** | `coverage/lcov-report/index.html` | Ao rodar `npm run test:coverage` |
+
+Para ver a cobertura, abra o arquivo `coverage/lcov-report/index.html` no navegador. A cobertura considera apenas os arquivos de `src/services/`.
+
+## Gerar o relatório em PDF
+
+O script `gerar-pdf` transforma o `relatorio/test-report.html` em PDF usando o **Puppeteer**, que **não vem instalado por padrão**:
+
+```bash
+# 1. Instalar o Puppeteer (apenas na primeira vez)
+npm install --save-dev puppeteer
+
+# 2. Rodar os testes para gerar o relatório HTML atualizado
+npm test
+
+# 3. Gerar o PDF
+npm run gerar-pdf
+```
+
+O arquivo final será salvo em `relatorio/relatorio-testes.pdf`.
 
 ---
 
